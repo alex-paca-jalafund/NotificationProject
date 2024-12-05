@@ -2,13 +2,15 @@ package org.example.event;
 
 import com.rabbitmq.client.*;
 import org.example.configuration.RabbitMQConfig;
+import org.example.dispatcher.NotificationDispatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class EventConsumer {
-
+    private static final Logger logger = LoggerFactory.getLogger(EventConsumer.class);
     private final ExecutorService executorService = Executors.newFixedThreadPool(4);
 
     public void startListening() {
@@ -20,32 +22,31 @@ public class EventConsumer {
             Channel channel = connection.createChannel();
 
             channel.queueDeclare(RabbitMQConfig.QUEUE_NAME, true, false, false, null);
-
-            System.out.println("📥 Esperando mensajes en la cola: " + RabbitMQConfig.QUEUE_NAME);
+            logger.info("📥 Esperando mensajes en la cola: " + RabbitMQConfig.QUEUE_NAME);
 
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
                 String message = new String(delivery.getBody(), "UTF-8");
-                System.out.println("🔄 Evento recibido: " + message);
-
+                logger.info("🔄 Evento recibido: " + message);
                 executorService.submit(() -> processEvent(message));
             };
 
-            channel.basicConsume(RabbitMQConfig.QUEUE_NAME, true, deliverCallback, consumerTag -> {
-            });
+            channel.basicConsume(RabbitMQConfig.QUEUE_NAME, true, deliverCallback, consumerTag -> {});
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("❌ Error al iniciar el consumidor.", e);
         }
     }
 
     private void processEvent(String event) {
-        System.out.println("📤 Procesando evento: " + event);
+        logger.info("📤 Procesando evento: " + event);
         try {
-            Thread.sleep(1000); // Simula el procesamiento
-            System.out.println("✅ Evento procesado: " + event);
+            // Simula el procesamiento
+            Thread.sleep(1000);
+            logger.info("✅ Evento procesado: " + event);
+            NotificationDispatcher.dispatch(event); // Enviar notificación
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            logger.error("🔄 Procesamiento interrumpido para el evento: " + event, e);
         }
     }
 }
-
