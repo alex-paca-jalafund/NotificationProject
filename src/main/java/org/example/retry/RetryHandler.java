@@ -11,15 +11,15 @@ public class RetryHandler {
         int retries = 0;
         while (retries < 3) {
             try {
-                logger.info("🔄 Intentando reintento para el mensaje: " + message);
+                logger.info("Intentando reintento para el mensaje: " + message);
                 channel.sendNotification(message);
-                logger.info("✅ Reintento exitoso para el mensaje: " + message);
+                logger.info("Reintento exitoso para el mensaje: " + message);
                 return;
             } catch (Exception e) {
                 retries++;
-                logger.error("⚠️ Error en reintento " + retries + " para el mensaje: " + message, e);
+                logger.error("Error en reintento " + retries + " para el mensaje: " + message, e);
             }
         }
-        logger.error("❌ Todos los intentos fallaron para el mensaje: " + message);
+        logger.error("Todos los intentos fallaron para el mensaje: " + message);
     }
 }

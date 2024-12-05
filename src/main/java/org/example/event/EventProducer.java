@@ -11,10 +11,10 @@ public class EventProducer {
     public void sendEvent(String message) {
         try {
             EventQueue.getQueue().put(message);
-            logger.info("✅ Evento enviado a la cola: " + message);
+            logger.info("Evento enviado a la cola: " + message);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            logger.error("❌ Error al enviar evento a la cola.", e);
+            logger.error("Error al enviar evento a la cola.", e);
         }
     }
 }

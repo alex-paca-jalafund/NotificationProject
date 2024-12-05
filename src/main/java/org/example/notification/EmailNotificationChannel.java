@@ -8,6 +8,6 @@ public class EmailNotificationChannel implements NotificationChannel {
 
     @Override
     public void sendNotification(String message) {
-        logger.info("📧 Enviando email: " + message);
+        logger.info("Enviando email: " + message);
     }
 }
