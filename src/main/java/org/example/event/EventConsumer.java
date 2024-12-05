@@ -1,8 +1,7 @@
 package org.example.event;
 
-import com.rabbitmq.client.*;
-import org.example.configuration.RabbitMQConfig;
 import org.example.dispatcher.NotificationDispatcher;
+import org.example.shared.EventQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,36 +13,32 @@ public class EventConsumer {
     private final ExecutorService executorService = Executors.newFixedThreadPool(4);
 
     public void startListening() {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost(RabbitMQConfig.HOST);
+        logger.info("📥 Iniciando consumidor de eventos...");
 
-        try {
-            Connection connection = factory.newConnection();
-            Channel channel = connection.createChannel();
+        executorService.submit(() -> {
+            while (true) {
+                try {
+                    // Obtener evento de la cola
+                    String event = EventQueue.getQueue().take();
+                    logger.info("🔄 Evento recibido: " + event);
 
-            channel.queueDeclare(RabbitMQConfig.QUEUE_NAME, true, false, false, null);
-            logger.info("📥 Esperando mensajes en la cola: " + RabbitMQConfig.QUEUE_NAME);
-
-            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-                String message = new String(delivery.getBody(), "UTF-8");
-                logger.info("🔄 Evento recibido: " + message);
-                executorService.submit(() -> processEvent(message));
-            };
-
-            channel.basicConsume(RabbitMQConfig.QUEUE_NAME, true, deliverCallback, consumerTag -> {});
-
-        } catch (Exception e) {
-            logger.error("❌ Error al iniciar el consumidor.", e);
-        }
+                    // Procesar evento de forma asíncrona
+                    executorService.submit(() -> processEvent(event));
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    logger.error("❌ Error al consumir evento de la cola.", e);
+                    break;
+                }
+            }
+        });
     }
 
     private void processEvent(String event) {
         logger.info("📤 Procesando evento: " + event);
         try {
-            // Simula el procesamiento
-            Thread.sleep(1000);
+            Thread.sleep(1000); // Simula el procesamiento
+            NotificationDispatcher.dispatch(event);
             logger.info("✅ Evento procesado: " + event);
-            NotificationDispatcher.dispatch(event); // Enviar notificación
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             logger.error("🔄 Procesamiento interrumpido para el evento: " + event, e);

@@ -8,8 +8,6 @@ public class SmsNotificationChannel implements NotificationChannel {
 
     @Override
     public void sendNotification(String message) {
-        // Implementación real de envío de SMS
         logger.info("📱 Enviando SMS: " + message);
     }
 }
-

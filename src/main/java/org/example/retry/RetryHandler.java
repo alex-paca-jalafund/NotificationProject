@@ -21,7 +21,5 @@ public class RetryHandler {
             }
         }
         logger.error("❌ Todos los intentos fallaron para el mensaje: " + message);
-        // Aquí se puede enviar el mensaje a una DLQ o registrar el fallo permanentemente.
     }
 }
-
