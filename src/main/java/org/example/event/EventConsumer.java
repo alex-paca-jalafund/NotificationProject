@@ -9,24 +9,22 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class EventConsumer {
+
     private static final Logger logger = LoggerFactory.getLogger(EventConsumer.class);
     private final ExecutorService executorService = Executors.newFixedThreadPool(4);
 
     public void startListening() {
-        logger.info("Iniciando consumidor de eventos...");
+        logger.info("Starting event consumer...");
 
         executorService.submit(() -> {
             while (true) {
                 try {
-                    // Obtener evento de la cola
                     String event = EventQueue.getQueue().take();
-                    logger.info("Evento recibido: " + event);
-
-                    // Procesar evento de forma asíncrona
+                    logger.info("Received event: {}", event);
                     executorService.submit(() -> processEvent(event));
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    logger.error("Error al consumir evento de la cola.", e);
+                    logger.error("Error consuming event from queue", e);
                     break;
                 }
             }
@@ -34,14 +32,14 @@ public class EventConsumer {
     }
 
     private void processEvent(String event) {
-        logger.info("Procesando evento: " + event);
+        logger.info("Processing event: {}", event);
         try {
-            Thread.sleep(1000); // Simula el procesamiento
+            Thread.sleep(1000);
             NotificationDispatcher.dispatch(event);
-            logger.info("Evento procesado: " + event);
+            logger.info("Event processed: {}", event);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            logger.error("Procesamiento interrumpido para el evento: " + event, e);
+            logger.error("Processing interrupted for event: {}", event, e);
         }
     }
 }
