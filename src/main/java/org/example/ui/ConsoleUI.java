@@ -2,14 +2,25 @@ package org.example.ui;
 
 import org.example.dispatcher.NotificationSender;
 
+/**
+ * Console-based user interface for interacting with the notification system.
+ */
 public class ConsoleUI {
 
     private final UserInputHandler userInputHandler;
 
+    /**
+     * Initializes the ConsoleUI with a UserInputHandler to process user input.
+     */
     public ConsoleUI() {
         this.userInputHandler = new UserInputHandler();
     }
 
+    /**
+     * Starts the user interface, allowing the user to send notifications via email or SMS.
+     *
+     * @param notificationSender The NotificationSender used to send notifications.
+     */
     public void start(NotificationSender notificationSender) {
         String option;
         String message;
