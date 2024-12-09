@@ -8,11 +8,18 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
+/**
+ * Consumes events from the event queue and processes them asynchronously by dispatching notifications.
+ */
 public class EventConsumer {
 
     private static final Logger logger = LoggerFactory.getLogger(EventConsumer.class);
     private final ExecutorService executorService = Executors.newFixedThreadPool(4);
 
+    /**
+     * Starts listening for events in the event queue and processes them concurrently.
+     */
     public void startListening() {
         logger.info("Starting event consumer...");
 
@@ -31,6 +38,11 @@ public class EventConsumer {
         });
     }
 
+    /**
+     * Processes the received event by dispatching it and logging the result.
+     *
+     * @param event The event to be processed.
+     */
     private void processEvent(String event) {
         logger.info("Processing event: {}", event);
         try {
