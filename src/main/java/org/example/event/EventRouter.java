@@ -13,10 +13,12 @@ public class EventRouter {
     );
 
     public static NotificationChannel routeEvent(String event) {
-        if (event.startsWith("EMAIL")) {
-            return CHANNELS.get("EMAIL");
-        } else if (event.startsWith("SMS")) {
-            return CHANNELS.get("SMS");
+        if (event != null) {
+            if (event.startsWith("EMAIL")) {
+                return CHANNELS.get("EMAIL");
+            } else if (event.startsWith("SMS")) {
+                return CHANNELS.get("SMS");
+            }
         }
         return null;
     }
