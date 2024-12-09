@@ -61,8 +61,48 @@ This system allows users to send email and SMS notifications using a simple cons
 - Console or terminal access to run the application.
 
 ---
+The **Asynchronous Event-Driven Notification System** is a modular architecture designed to process and send notifications efficiently using asynchronous events. Here's a breakdown of its key components:  
+
+1. **User**: Triggers notifications by generating events.  
+2. **Event Producer**: Creates events and sends them to the **Event Queue**.  
+3. **Event Queue**: Temporarily stores events until they are processed.  
+4. **Event Consumer**: Retrieves events from the queue and passes them for routing.  
+5. **Event Router**: Determines the appropriate notification channel (Email or SMS).  
+6. **Notification Dispatcher**: Sends notifications through the corresponding channels:
+   - **Email Sender**: Sends email notifications.  
+   - **SMS Sender**: Sends SMS notifications.  
+7. **Retry Mechanism**: Handles failed notification attempts, retrying them up to a set limit.  
+
+**Flow**:  
+User → Event Producer → Event Queue → Event Consumer → Event Router → Notification Dispatcher → Retry Mechanism  
+
+The system ensures scalability, asynchronous processing, and reliable delivery of notifications.
+
+
+1. SystemContext: System view, includes all the elements and their interactions in the notification system.
+
+![image](https://github.com/user-attachments/assets/fff1195d-1938-48b9-9723-49b98acb412d)
+
+
+2. ContainerView: Container View, shows the system containers (Event Producer, Event Queue, Event Consumer, Event Router, Notification Dispatcher, Retry Mechanism) and their relationships.
+
+![image](https://github.com/user-attachments/assets/1330ec7e-0ee7-4873-aca1-cc4f81e478f6)
+
+![image](https://github.com/user-attachments/assets/f1186200-1cae-4783-b237-bd5be1fe57d6)
+
+3. NotificationDispatcherComponents: View of the Notification Dispatcher components, showing the Email Sender and the SMS Sender, with their relationship between them for sending notifications.
+
+![image](https://github.com/user-attachments/assets/0a8d7d33-2795-4ce6-9a64-02719150177a)
+
+
+---
 
 ## **Developed By**
 # Team members:
 - Alex Paca Meneses
 - Gabriela Garcia Villalobos
+
+## **Tools**
+
+- [Notification System Design on Canva](https://www.canva.com/design/DAGWdWh4MdY/_3TRRx6CJ9IWf09lc0gJ9w/edit?utm_content=DAGWdWh4MdY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+- [Notification Project Board on Trello](https://trello.com/invite/b/672259a93c5119e2dcd0f37b/ATTI6eb6f4d3e12cd9d0888bdd48f3bc00267DE8E947/notification-project)
