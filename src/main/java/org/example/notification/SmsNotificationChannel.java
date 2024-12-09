@@ -8,6 +8,6 @@ public class SmsNotificationChannel implements NotificationChannel {
 
     @Override
     public void sendNotification(String message) {
-        logger.info("Enviando SMS: " + message);
+        logger.info("Sending SMS: {}", message);
     }
 }
