@@ -23,13 +23,13 @@ public class NotificationDispatcher {
         if (channel != null) {
             try {
                 channel.sendNotification(message);
-                logger.info("Notificación enviada a través de: " + channel.getClass().getSimpleName());
+                logger.info("Notification sent by: " + channel.getClass().getSimpleName());
             } catch (Exception e) {
-                logger.error("Error al enviar notificación.", e);
+                logger.error("Error sending notification:", e);
                 RetryHandler.retryNotification(message, channel);
             }
         } else {
-            logger.warn("No se encontró un canal de notificación para el evento: " + message);
+            logger.warn("No notification channel was found for the event: " + message);
         }
     }
 }
